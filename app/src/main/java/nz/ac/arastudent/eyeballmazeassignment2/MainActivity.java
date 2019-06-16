@@ -6,9 +6,20 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
+import java.util.List;
+
+import nz.ac.arastudent.eyeballmazeassignment2.model.IGame;
+import nz.ac.arastudent.eyeballmazeassignment2.model.Model;
 
 public class MainActivity extends AppCompatActivity {
 
+    Button[][] buttons = new Button[6][4];
+
+    public IGame myModel = new Model();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,6 +28,41 @@ public class MainActivity extends AppCompatActivity {
         //Set tool bar
         Toolbar myToolbar = findViewById(R.id.game_toolbar);
         setSupportActionBar(myToolbar);
+
+
+
+        //Set button
+        buttons[0][0] = (Button)findViewById(R.id.grid00);
+        buttons[0][1] = (Button)findViewById(R.id.grid10);
+        buttons[0][2] = (Button)findViewById(R.id.grid20);
+        buttons[0][3] = (Button)findViewById(R.id.grid30);
+
+        buttons[1][0] = (Button)findViewById(R.id.grid01);
+        buttons[1][1] = (Button)findViewById(R.id.grid11);
+        buttons[1][2] = (Button)findViewById(R.id.grid21);
+        buttons[1][3] = (Button)findViewById(R.id.grid31);
+
+        buttons[2][0] = (Button)findViewById(R.id.grid02);
+        buttons[2][1] = (Button)findViewById(R.id.grid12);
+        buttons[2][2] = (Button)findViewById(R.id.grid22);
+        buttons[2][3] = (Button)findViewById(R.id.grid32);
+
+        buttons[3][0] = (Button)findViewById(R.id.grid03);
+        buttons[3][1] = (Button)findViewById(R.id.grid13);
+        buttons[3][2] = (Button)findViewById(R.id.grid23);
+        buttons[3][3] = (Button)findViewById(R.id.grid33);
+
+        buttons[4][0] = (Button)findViewById(R.id.grid04);
+        buttons[4][1] = (Button)findViewById(R.id.grid14);
+        buttons[4][2] = (Button)findViewById(R.id.grid24);
+        buttons[4][3] = (Button)findViewById(R.id.grid34);
+
+        buttons[5][0] = (Button)findViewById(R.id.grid05);
+        buttons[5][1] = (Button)findViewById(R.id.grid15);
+        buttons[5][2] = (Button)findViewById(R.id.grid25);
+        buttons[5][3] = (Button)findViewById(R.id.grid35);
+
+        this.initialiseGame();
     }
 
     @Override
@@ -49,4 +95,66 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void updateGame(){
+        for(int y = 0; y < this.buttons.length; y++){
+            for(int x = 0; x < this.buttons[y].length; x++){
+                Button aButton = this.buttons[y][x];
+                aButton.setText(this.myModel.getItem(x, y));
+            }
+        }
+    }
+
+    public void checkMove(int x, int y){
+        Integer[] currentPos = this.myModel.getPlayerLocation();
+        Integer currentX = currentPos[0];
+        Integer currentY = currentPos[1];
+        String direction = "";
+        Integer distance = 0;
+
+        if (x == currentX && y == currentY){
+            Toast.makeText(getApplicationContext(),
+                    "You are already on this position", Toast.LENGTH_SHORT).show();
+        }
+       // else if (y < currentY && x < currentX || y > currentY && x > currentX) {
+         //   Toast.makeText(getApplicationContext(),
+           //         "You can only move left, right or forward", Toast.LENGTH_SHORT).show();
+        //}
+        else {
+            if (y < currentY) {
+                direction = "U";
+                distance = currentY - y;
+            } else if (y > currentY) {
+                direction = "D";
+                distance = y - currentY;
+            } else if (x < currentX) {
+                direction = "A";
+                distance = currentX - x;
+            } else if (y < currentY) {
+                direction = "D";
+                distance = x - currentX;
+            }
+            String move = direction + distance.toString();
+            this.myModel.makeMove(move);
+            updateGame();
+        }
+    };
+
+    public void initialiseGame(){
+        for(int y = 0; y < this.buttons.length; y++){
+            for(int x = 0; x < this.buttons[y].length; x++){
+                Button aButton = this.buttons[y][x];
+                aButton.setText(this.myModel.getItem(x, y));
+                final int weirdX = x;
+                final int weirdY = y;
+                aButton.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view){
+                        checkMove(weirdX, weirdY);
+                    }
+                });
+            }
+        }
+    }
+
+
 }
