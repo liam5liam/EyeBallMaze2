@@ -16,4 +16,5 @@ public interface IGame {
 	Integer[] getPlayerLocation();
     String getGoalCount();
     String getMoveCount();
+    void loadLevel();
 }

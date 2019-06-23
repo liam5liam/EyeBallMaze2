@@ -81,7 +81,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.action_load){
-
+            myModel.loadLevel();
+            this.myModel.updateMaze();
+            updateGame();
         }
 
         if(id == R.id.action_save){
