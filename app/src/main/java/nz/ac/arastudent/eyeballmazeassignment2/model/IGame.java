@@ -15,4 +15,5 @@ public interface IGame {
 	String getItem(int x, int y);
 	Integer[] getPlayerLocation();
     String getGoalCount();
+    String getMoveCount();
 }

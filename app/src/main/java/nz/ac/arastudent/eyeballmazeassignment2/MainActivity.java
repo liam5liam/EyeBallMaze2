@@ -108,6 +108,9 @@ public class MainActivity extends AppCompatActivity {
         }
         TextView textView = findViewById(R.id.GoalCounter);
         textView.setText(myModel.getGoalCount());
+
+        TextView moveCounter = findViewById(R.id.MoveCounter);
+        moveCounter.setText(myModel.getMoveCount());
     }
 
     public void checkMove(int x, int y){
@@ -161,6 +164,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void initialiseGame(){
         this.myModel.updateMaze();
+        TextView textView = findViewById(R.id.GoalCounter);
+        textView.setText(myModel.getGoalCount());
+
+        TextView moveCounter = findViewById(R.id.MoveCounter);
+        moveCounter.setText(myModel.getMoveCount());
+
         for(int y = 0; y < this.buttons.length; y++){
             for(int x = 0; x < this.buttons[y].length; x++){
                 Button aButton = this.buttons[y][x];

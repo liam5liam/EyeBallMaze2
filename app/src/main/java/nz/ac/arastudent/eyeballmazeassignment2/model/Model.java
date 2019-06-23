@@ -79,6 +79,10 @@ public class Model implements IGame {
        return Integer.toString(goalCounter);
     }
 
+	public String getMoveCount(){
+		return Integer.toString(moveCounter);
+	}
+
     public Integer[] getPlayerLocation(){
 		Integer[] coords;
 		coords = new Integer[2];
