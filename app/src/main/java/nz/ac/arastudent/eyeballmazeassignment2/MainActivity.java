@@ -106,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkMove(int x, int y){
+        this.myModel.updateMaze();
         Integer[] currentPos = this.myModel.getPlayerLocation();
-        Integer currentX = currentPos[0];
-        Integer currentY = currentPos[1];
+        int currentX = currentPos[0];
+        int currentY = currentPos[1];
         String direction = "";
-        Integer distance = 0;
-
+        int distance = 0;
         if (x == currentX && y == currentY){
             Toast.makeText(getApplicationContext(),
                     "You are already on this position", Toast.LENGTH_SHORT).show();
@@ -122,25 +122,39 @@ public class MainActivity extends AppCompatActivity {
         //}
         else {
             if (y < currentY) {
-                direction = "U";
+                direction = "W";
                 distance = currentY - y;
             } else if (y > currentY) {
-                direction = "D";
+                direction = "S";
                 distance = y - currentY;
             } else if (x < currentX) {
                 direction = "A";
                 distance = currentX - x;
-            } else if (y < currentY) {
+            } else if (x > currentX) {
                 direction = "D";
                 distance = x - currentX;
             }
-            String move = direction + distance.toString();
-            this.myModel.makeMove(move);
+
+            //check if complete
+            if (myModel.isComplete()){
+                Toast.makeText(getApplicationContext(),
+                        "You have solved it", Toast.LENGTH_SHORT).show();
+            }
+
+            //check move isnt backwards
+            String isBackwards = this.myModel.makeMove(direction, distance);
+
+            if (isBackwards != "") {
+                Toast.makeText(getApplicationContext(),
+                        isBackwards, Toast.LENGTH_SHORT).show();
+            }
+            this.myModel.updateMaze();
             updateGame();
         }
-    };
+    }
 
     public void initialiseGame(){
+        this.myModel.updateMaze();
         for(int y = 0; y < this.buttons.length; y++){
             for(int x = 0; x < this.buttons[y].length; x++){
                 Button aButton = this.buttons[y][x];

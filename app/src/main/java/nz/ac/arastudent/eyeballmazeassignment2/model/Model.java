@@ -23,7 +23,7 @@ public class Model implements IGame {
 		};
 		
 	public int moveCounter = 0;
-	public int goalCounter = -1;
+	public int goalCounter = 1;
 	public int goalsSolved = 0;
 	CoOrds player = new CoOrds(0, 0, PlayerDirection.Up);
 	
@@ -41,15 +41,16 @@ public class Model implements IGame {
 				String[] item = GameMap[y][x].split("");
 				StringBuilder sb = new StringBuilder(GameMap[y][x]);
 				
-				if (Goal.get(item[3].toString())== Goal.Open && this.moveCounter == 0) {
+				if (Goal.get(item[4].toString())== Goal.Open && this.moveCounter == 0) {
 					this.goalCounter++;
 				}
 				if (sb.charAt(2) != ' '){
 					player.x = x;
 					player.y = y;
-					player.looking = PlayerDirection.get(item[2]);
-					this.currentShape = Shapes.get(item[0]);
-					this.currentColour = Colours.get(item[1]);
+					player.looking = PlayerDirection.get(item[3]);
+					System.out.println(player.looking.getNumber());
+					this.currentShape = Shapes.get(item[1]);
+					this.currentColour = Colours.get(item[2]);
 				}
 			}
 		}
@@ -74,9 +75,15 @@ public class Model implements IGame {
     }
 
     public Integer[] getPlayerLocation(){
-		Integer[] coords = {player.x, player.y};
-		return coords;
+		Integer[] coords;
+		coords = new Integer[2];
+
+		coords[0] = player.x;
+        coords[1] = player.y;
+
+        return coords;
 	}
+
 	public String getItem(int x, int y){
 		return GameMap[y][x];
 	}
@@ -88,23 +95,22 @@ public class Model implements IGame {
     		temp.add(false);
     	} else {
 	    	String[] item = GameMap[y][x].split("");
-	    	Shapes shape = Shapes.get(item[0]);
-	    	Colours colour = Colours.get(item[1]);
-	    	Goal goal = Goal.get(item[3]);
+	    	Shapes shape = Shapes.get(item[1]);
+	    	Colours colour = Colours.get(item[2]);
+	    	Goal goal = Goal.get(item[4]);
 	    	
 	    	temp.add(shape);
 	    	temp.add(colour);
 	    	temp.add(goal);
-	    	
     	}
 		return temp.toArray();
     }
     
-    public void makeMove(String move){
-    	String[] theirInput = move.split("");
-    	Direction direction = Direction.get(theirInput[0].toUpperCase());
-    	
-    	int spaces = Integer.parseInt(theirInput[1]);
+    public String makeMove(String move, int space){
+    	//String[] theirInput = move.split("");
+    	Direction direction = Direction.get(move);
+		String out = "Can not move backwards";
+    	int spaces = space;
     	if (this.isNotMovingBackwards(direction)){
 	    	moveCounter++;
 	    	if (direction == Direction.Down) { this.moveVertical(spaces, PlayerDirection.Down);}
@@ -112,12 +118,17 @@ public class Model implements IGame {
 	    	
 	    	if (direction == Direction.Left) { this.moveHorizontal(-spaces, PlayerDirection.Left);}
 	    	if (direction == Direction.Right) { this.moveHorizontal(spaces, PlayerDirection.Right);}
-			
+			out = "";
 		}
+
+    	this.updateMaze();
+    	return out;
     }
     
     private boolean isNotMovingBackwards(Direction direction){
     	Boolean out = true;
+		System.out.println(direction.getNumber());
+		System.out.println(player.looking.getNumber());
     	if(direction.getNumber() + player.looking.getNumber() == 0){
     		out = false;
     	}
@@ -178,7 +189,7 @@ public class Model implements IGame {
     	int movingTo = player.y + spaces;
     	
     	Object[] newLocation = whatsAt(player.x, movingTo);
-    	
+
     	if (newLocation.length < 2){
     		System.out.println("Invalid Move");
     	}
@@ -186,6 +197,11 @@ public class Model implements IGame {
 	    	Shapes newShape = (Shapes) newLocation[0];
 	    	Colours newColour = (Colours) newLocation[1];
 	    	Goal goal = (Goal) newLocation[2];
+			//System.out.println(currentShape);
+			//System.out.println(currentColour);
+	    	//System.out.println(newLocation[0]);
+			//System.out.println(newLocation[1]);
+			//System.out.println(goal);
 	    	if(goal == Goal.Done){
 	    		System.out.println("This goal has already been solved");
 	    		
@@ -219,7 +235,7 @@ public class Model implements IGame {
 	    		sb2.insert(2, player.looking.getAbbreviation());
 	    		GameMap[movingTo][player.x] = sb2.toString();
 	    		
-	    	} else { System.out.println("Invalid Move");}
+	    	} else { System.out.println("Invalid Move2");}
     	}
     }
     
@@ -253,26 +269,26 @@ public class Model implements IGame {
     }
     
     public boolean isComplete(){
-    	boolean result = true;
+    	boolean result = false;
     	if (this.goalCounter == this.goalsSolved){
     		//result = false;
-    		System.out.println("Contratualations you have solved it");
+    		result = true;
     	}
     	return result;
     }
     
-    public void start() {
-    	this.updateMaze();
-    	while (isComplete()){
-    		this.updateMaze();
-    		
-	    	Scanner in = new Scanner(System.in);
-	    	String s = in.nextLine();
-	    	this.makeMove(s);
-	    	System.out.println(this.moveCounter);
-	    	System.out.println(this.goalCounter);
-	    	System.out.println(this.goalsSolved);
+   // public void start() {
+    //	this.updateMaze();
+    //	while (isComplete()){
+    //		this.updateMaze();
+    //
+	  //  	Scanner in = new Scanner(System.in);
+	    //	String s = in.nextLine();
+	    //	this.makeMove(s);
+	    //	System.out.println(this.moveCounter);
+	    //	System.out.println(this.goalCounter);
+	    //	System.out.println(this.goalsSolved);
 	    	//this.clearConsole();
-    	}
-    }
+    	//}
+   // }
 }
