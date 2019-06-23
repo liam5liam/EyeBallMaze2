@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.game_toolbar);
         setSupportActionBar(myToolbar);
 
+        TextView textView = findViewById(R.id.GoalCounter);
+        textView.setText("0");
 
 
         //Set button
@@ -103,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
                 aButton.setText(this.myModel.getItem(x, y));
             }
         }
+        TextView textView = findViewById(R.id.GoalCounter);
+        textView.setText(myModel.getGoalCount());
     }
 
     public void checkMove(int x, int y){
@@ -135,20 +140,21 @@ public class MainActivity extends AppCompatActivity {
                 distance = x - currentX;
             }
 
-            //check if complete
-            if (myModel.isComplete()){
-                Toast.makeText(getApplicationContext(),
-                        "You have solved it", Toast.LENGTH_SHORT).show();
-            }
+            this.myModel.updateMaze();
 
-            //check move isnt backwards
+
+            //check move isn't backwards
             String isBackwards = this.myModel.makeMove(direction, distance);
 
             if (isBackwards != "") {
                 Toast.makeText(getApplicationContext(),
                         isBackwards, Toast.LENGTH_SHORT).show();
             }
-            this.myModel.updateMaze();
+            //check if complete
+            if (myModel.isComplete()){
+                Toast.makeText(getApplicationContext(),
+                        "You have solved it", Toast.LENGTH_SHORT).show();
+            }
             updateGame();
         }
     }

@@ -23,8 +23,8 @@ public class Model implements IGame {
 		};
 		
 	public int moveCounter = 0;
-	public int goalCounter = 1;
-	public int goalsSolved = 0;
+	public int goalCounter = 0;
+
 	CoOrds player = new CoOrds(0, 0, PlayerDirection.Up);
 	
 	Shapes currentShape = Shapes.Diamond;
@@ -33,6 +33,7 @@ public class Model implements IGame {
 
 
 	public void updateMaze(){
+		int tempGoalCounter = 0;
 		for (int y = 0; y < GameMap.length; ++y){
 			for (int x = 0; x < GameMap[y].length; ++x){
 				String pos = GameMap[y][x];
@@ -41,19 +42,19 @@ public class Model implements IGame {
 				String[] item = GameMap[y][x].split("");
 				StringBuilder sb = new StringBuilder(GameMap[y][x]);
 				
-				if (Goal.get(item[4].toString())== Goal.Open && this.moveCounter == 0) {
-					this.goalCounter++;
+				if (Goal.get(item[4])== Goal.Open) {
+					tempGoalCounter++;
 				}
 				if (sb.charAt(2) != ' '){
 					player.x = x;
 					player.y = y;
 					player.looking = PlayerDirection.get(item[3]);
-					System.out.println(player.looking.getNumber());
 					this.currentShape = Shapes.get(item[1]);
 					this.currentColour = Colours.get(item[2]);
 				}
 			}
 		}
+		this.goalCounter = tempGoalCounter;
 	}
 	
 	public Integer getRowCount(){
@@ -72,6 +73,10 @@ public class Model implements IGame {
 	
     public void restartMaze(){
 
+    }
+
+    public String getGoalCount(){
+       return Integer.toString(goalCounter);
     }
 
     public Integer[] getPlayerLocation(){
@@ -127,8 +132,6 @@ public class Model implements IGame {
     
     private boolean isNotMovingBackwards(Direction direction){
     	Boolean out = true;
-		System.out.println(direction.getNumber());
-		System.out.println(player.looking.getNumber());
     	if(direction.getNumber() + player.looking.getNumber() == 0){
     		out = false;
     	}
@@ -166,8 +169,6 @@ public class Model implements IGame {
 	    		sb2.insert(3, Goal.Done.getAbbreviation());
 	    		GameMap[player.y][movingTo] = sb2.toString();
 	    		
-	    		this.goalsSolved++;
-	    		
 	    	}else if (goal == Goal.NaG && (this.currentShape == newShape || this.currentColour == newColour)){ 
 	    		player.looking = playerDirection;
 	    		
@@ -197,11 +198,7 @@ public class Model implements IGame {
 	    	Shapes newShape = (Shapes) newLocation[0];
 	    	Colours newColour = (Colours) newLocation[1];
 	    	Goal goal = (Goal) newLocation[2];
-			//System.out.println(currentShape);
-			//System.out.println(currentColour);
-	    	//System.out.println(newLocation[0]);
-			//System.out.println(newLocation[1]);
-			//System.out.println(goal);
+
 	    	if(goal == Goal.Done){
 	    		System.out.println("This goal has already been solved");
 	    		
@@ -219,9 +216,7 @@ public class Model implements IGame {
 	    		sb2.insert(2, player.looking.getAbbreviation());
 	    		sb2.insert(3, Goal.Done.getAbbreviation());
 	    		GameMap[movingTo][player.x] = sb2.toString();
-	    		
-	    		this.goalsSolved++;
-	    		
+
 	    	}else if (goal == Goal.NaG && (this.currentShape == newShape || this.currentColour == newColour)){ 
 	    		player.looking = playerDirection;
 	    		
@@ -270,7 +265,7 @@ public class Model implements IGame {
     
     public boolean isComplete(){
     	boolean result = false;
-    	if (this.goalCounter == this.goalsSolved){
+    	if (this.goalCounter == 0){
     		//result = false;
     		result = true;
     	}

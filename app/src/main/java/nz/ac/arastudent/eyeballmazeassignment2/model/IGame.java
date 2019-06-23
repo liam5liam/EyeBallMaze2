@@ -14,4 +14,5 @@ public interface IGame {
 	boolean isComplete();
 	String getItem(int x, int y);
 	Integer[] getPlayerLocation();
+    String getGoalCount();
 }
