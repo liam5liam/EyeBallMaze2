@@ -1,11 +1,17 @@
 package nz.ac.arastudent.eyeballmazeassignment2.model;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Scanner;
+import java.util.logging.Level;
+
+import nz.ac.arastudent.eyeballmazeassignment2.R;
 
 public class Model implements IGame {	
 
@@ -21,7 +27,7 @@ public class Model implements IGame {
 			{"TG  ", "SR  ", "SG  ", "DY  "},
 			{"TR  ", "TB  ", "SR  ", "TG  "},
 			{"SB  ", "DR  ", "TB  ", "DB  "},
-			{"    ", "    ", "    ", "    "}
+			{"    ", "DBU ", "    ", "    "}
 		};
 		
 	public int moveCounter = 0;
@@ -32,16 +38,8 @@ public class Model implements IGame {
 	Shapes currentShape = Shapes.Diamond;
 	Colours currentColour = Colours.Blue;
 
-	public void loadLevel(){
-		Scanner sc = new Scanner(new BufferedReader(new FileReader("Level.txt")));
-		while(sc.hasNextLine()) {
-			for (int i=0; i<5; i++) {
-				String[] line = sc.nextLine().trim().split(" ");
-				for (int j=0; j<3; j++) {
-					GameMap[i][j] = line[j];
-				}
-			}
-		}
+	public void setMazeCharacter(int x, int y, String item){
+		GameMap[y][x] = item;
 	}
 
 	public void updateMaze(){

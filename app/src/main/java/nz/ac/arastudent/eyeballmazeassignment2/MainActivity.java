@@ -11,7 +11,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Scanner;
 
 import nz.ac.arastudent.eyeballmazeassignment2.model.IGame;
 import nz.ac.arastudent.eyeballmazeassignment2.model.Model;
@@ -68,6 +74,30 @@ public class MainActivity extends AppCompatActivity {
         this.initialiseGame();
     }
 
+    private void readALevel() {
+        final String originalFileSrc = "level.txt";
+        try {
+            InputStream inputStream = getAssets().open(originalFileSrc);
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            Scanner sc = new Scanner(bufferedReader);
+            while(sc.hasNextLine()) {
+                for (int i=0; i<5; i++) {
+                    String[] line = sc.nextLine().trim().split(",");
+                    for (int j=0; j<3; j++) {
+                        myModel.setMazeCharacter(i, j, line[j]);
+                    }
+                }
+            }
+
+            //don't forget to close!
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -81,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.action_load){
-            myModel.loadLevel();
+            readALevel();
             this.myModel.updateMaze();
             updateGame();
         }
