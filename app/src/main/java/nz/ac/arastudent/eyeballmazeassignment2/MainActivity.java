@@ -77,20 +77,22 @@ public class MainActivity extends AppCompatActivity {
     private void readALevel() {
         final String originalFileSrc = "level.txt";
         try {
-            InputStream inputStream = getAssets().open(originalFileSrc);
+            InputStream inputStream = getResources().openRawResource(R.raw.level);
+
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-            Scanner sc = new Scanner(bufferedReader);
-            while(sc.hasNextLine()) {
-                for (int i=0; i<5; i++) {
-                    String[] line = sc.nextLine().trim().split(",");
-                    for (int j=0; j<3; j++) {
-                        myModel.setMazeCharacter(i, j, line[j]);
-                    }
+            String line;
+            int j = 0;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] line2 = line.split(",");
+                for (int i=0; i<line2.length; i++) {
+                    line2[i] = line2[i].replace("\"", "");
+                    myModel.setMazeCharacter(i, j, line2[i]);
                 }
+                j++;
             }
-
             //don't forget to close!
             bufferedReader.close();
         } catch (IOException e) {
@@ -121,7 +123,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(id == R.id.action_restart){
-
+            readALevel();
+            this.myModel.updateMaze();
+            updateGame();
         }
 
         if(id == R.id.action_help){

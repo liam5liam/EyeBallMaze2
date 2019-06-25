@@ -146,7 +146,7 @@ public class Model implements IGame {
     
     private boolean isNotMovingBackwards(Direction direction){
     	Boolean out = true;
-    	if(direction.getNumber() + player.looking.getNumber() == 0){
+    	if(direction.getNumber() + this.player.looking.getNumber() == 0){
     		out = false;
     	}
     	return out;
