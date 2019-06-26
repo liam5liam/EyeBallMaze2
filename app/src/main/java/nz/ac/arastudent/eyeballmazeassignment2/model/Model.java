@@ -94,6 +94,7 @@ public class Model implements IGame {
        return Integer.toString(goalCounter);
     }
 
+	public void setMoveCount(String moveCount) { this.moveCounter = Integer.parseInt(moveCount); }
 	public String getMoveCount(){
 		return Integer.toString(moveCounter);
 	}

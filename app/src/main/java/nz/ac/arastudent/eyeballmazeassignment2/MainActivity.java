@@ -112,15 +112,46 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    private void saveALevel() {
+
+    private void loadLevel() {
+        this.sharedPreferences = getSharedPreferences("nz.ac.arastudent.eyeballmazeassignment2.savedLevel.txt", Context.MODE_PRIVATE);
+        String map = sharedPreferences.getString(THE_MAP, "None");
+
+        String[] rows = sharedPreferences.getString(THE_MAP, "None").split(":");
+
+        int y = 0;
+        for (String aRow : rows){
+            String[] blocks = aRow.split(",");
+
+            int x = 0;
+            for (String aBlock : blocks){
+                System.out.println(aBlock + "()");
+                myModel.setMazeCharacter(x, y, aBlock);
+                x++;
+            }
+            y++;
+        }
+        System.out.println(sharedPreferences.getString(MOVES, "None"));
+       // myModel.setMoveCount(sharedPreferences.getString(MOVES, "None"));
+        //myModel.setGoalCount(sharedPreferences.getString(GOALS_LEFT, "None"));
+
+        Toast.makeText(MainActivity.this, "Game Loaded!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void loadMoves() {
+        this.sharedPreferences = getSharedPreferences("nz.ac.arastudent.eyeballmazeassignment2.savedLevel.txt", Context.MODE_PRIVATE);
+        myModel.setMoveCount(sharedPreferences.getString(MOVES, "None"));
+    }
+    private void saveLevel() {
         String[][] currentState = myModel.getGameMap();
         String myMap = "";
 
         for (int y = 0; y < currentState.length; ++y) {
             for (int x = 0; x < currentState[y].length; ++x) {
                 String pos = currentState[y][x];
+                System.out.println(pos + ":");
                 myMap += pos;
-                if (x != 0 && y != 0) {
+                if (x != currentState[y].length) {
                     myMap += ",";
                 }
             }
@@ -131,11 +162,14 @@ public class MainActivity extends AppCompatActivity {
 
         this.sharedPreferences = getSharedPreferences("nz.ac.arastudent.eyeballmazeassignment2.savedLevel.txt", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = this.sharedPreferences.edit();
+        //editor.clear();
 
         editor.putString(THE_MAP, myMap);
+        editor.apply();
         editor.putString(GOALS_LEFT, myModel.getGoalCount());
+        editor.apply();
         editor.putString(MOVES, myModel.getMoveCount());
-        editor.commit();
+        editor.apply();
 
         Toast.makeText(MainActivity.this, "Game Saved!", Toast.LENGTH_SHORT).show();
     }
@@ -153,13 +187,16 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.action_load){
-            readALevel();
+            loadLevel();
+            this.myModel.updateMaze();
+            updateGame();
+            loadMoves();
             this.myModel.updateMaze();
             updateGame();
         }
 
         if(id == R.id.action_save){
-            saveALevel();
+            saveLevel();
         }
 
         if(id == R.id.action_restart){

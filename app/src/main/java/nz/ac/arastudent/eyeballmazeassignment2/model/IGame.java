@@ -15,7 +15,9 @@ public interface IGame {
 	String getItem(int x, int y);
 	Integer[] getPlayerLocation();
     String getGoalCount();
+	void setGoalCount(String goalCount);
     String getMoveCount();
+	void setMoveCount(String moveCount);
     void setMazeCharacter(int x, int y, String item);
 	String[][] getGameMap();
 }
