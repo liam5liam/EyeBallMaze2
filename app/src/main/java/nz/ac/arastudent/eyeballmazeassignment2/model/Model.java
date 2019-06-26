@@ -42,6 +42,10 @@ public class Model implements IGame {
 		GameMap[y][x] = item;
 	}
 
+	public String[][] getGameMap(){
+		return this.GameMap;
+	}
+
 	public void updateMaze(){
 		int tempGoalCounter = 0;
 		for (int y = 0; y < GameMap.length; ++y){
@@ -70,7 +74,7 @@ public class Model implements IGame {
 	public Integer getRowCount(){
 		return GameMap.length;	
 	}
-	
+
 	public Integer getcolumnCount(){
 		int previousRowLength = 0;
 		
@@ -85,6 +89,7 @@ public class Model implements IGame {
 
     }
 
+    public void setGoalCount(String goalCount) { this.goalCounter = Integer.parseInt(goalCount); }
     public String getGoalCount(){
        return Integer.toString(goalCounter);
     }

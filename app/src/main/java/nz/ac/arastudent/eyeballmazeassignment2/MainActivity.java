@@ -1,6 +1,8 @@
 package nz.ac.arastudent.eyeballmazeassignment2;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,19 +14,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Scanner;
-
 import nz.ac.arastudent.eyeballmazeassignment2.model.IGame;
 import nz.ac.arastudent.eyeballmazeassignment2.model.Model;
 
 public class MainActivity extends AppCompatActivity {
 
     Button[][] buttons = new Button[6][4];
+    String THE_MAP = "";
+    String MOVES = "";
+    String GOALS_LEFT = "";
+
+    SharedPreferences sharedPreferences = null;
 
     public IGame myModel = new Model();
     @Override
@@ -71,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         buttons[5][2] = (Button)findViewById(R.id.grid25);
         buttons[5][3] = (Button)findViewById(R.id.grid35);
 
+
         this.initialiseGame();
     }
 
@@ -99,6 +112,33 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    private void saveALevel() {
+        String[][] currentState = myModel.getGameMap();
+        String myMap = "";
+
+        for (int y = 0; y < currentState.length; ++y) {
+            for (int x = 0; x < currentState[y].length; ++x) {
+                String pos = currentState[y][x];
+                myMap += pos;
+                if (x != 0 && y != 0) {
+                    myMap += ",";
+                }
+            }
+            if (y != currentState.length - 1){
+                myMap += ":";
+            }
+        }
+
+        this.sharedPreferences = getSharedPreferences("nz.ac.arastudent.eyeballmazeassignment2.savedLevel.txt", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+
+        editor.putString(THE_MAP, myMap);
+        editor.putString(GOALS_LEFT, myModel.getGoalCount());
+        editor.putString(MOVES, myModel.getMoveCount());
+        editor.commit();
+
+        Toast.makeText(MainActivity.this, "Game Saved!", Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -119,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(id == R.id.action_save){
-
+            saveALevel();
         }
 
         if(id == R.id.action_restart){
