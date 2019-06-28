@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Eye Ball Maze Assignment 2</string>
     <string name="button">Button</string>
+    <string name="buttonLength">75dp</string>
 </resources>
