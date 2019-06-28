@@ -306,15 +306,27 @@
         app:layout_constraintTop_toBottomOf="@+id/game_toolbar" />
 
     <TextView
-        android:id="@+id/movesCounter"
+        android:id="@+id/moves"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_alignStart="@+id/game_toolbar"
+        android:layout_alignLeft="@+id/game_toolbar"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Moves Left: " />
+
+    <TextView
+        android:id="@+id/movesLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/game_toolbar"
-        android:layout_alignStart="@+id/movesCounter"
-        android:layout_alignLeft="@+id/movesCounter"
-        android:layout_marginStart="0dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="38dp"
-        android:text="TextView" />
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="35dp"
+        android:layout_toEndOf="@+id/moves"
+        android:layout_toRightOf="@+id/moves"
+        android:text="0" />
 
 </RelativeLayout>

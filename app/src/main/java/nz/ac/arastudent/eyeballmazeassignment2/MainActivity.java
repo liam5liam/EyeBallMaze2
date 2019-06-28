@@ -51,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.GoalCounter);
         textView.setText("0");
 
+        TextView movesLeft = findViewById(R.id.movesLeft);
+        movesLeft.setText(myModel.getMovesLeft().toString());
+
 
         //Set button
         buttons[0][0] = (Button)findViewById(R.id.grid00);
@@ -135,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
         myModel.setMoveCount(sharedPreferences.getString("movesLeft", "None"));
         myModel.setGoalCount(sharedPreferences.getString("goalsLeft", "None"));
-
+        myModel.setMovesLeft(sharedPreferences.getString("movesLeft", "None"));
         Toast.makeText(MainActivity.this, "Game Loaded!", Toast.LENGTH_SHORT).show();
     }
 
@@ -166,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
         editor.putString("movesLeft", myModel.getMoveCount());
         editor.apply();
+
 
         Toast.makeText(MainActivity.this, "Game Saved!", Toast.LENGTH_SHORT).show();
     }
@@ -226,6 +230,9 @@ public class MainActivity extends AppCompatActivity {
 
         TextView moveCounter = findViewById(R.id.MoveCounter);
         moveCounter.setText(myModel.getMoveCount());
+
+        TextView movesLeft = findViewById(R.id.movesLeft);
+        movesLeft.setText(myModel.getMovesLeft().toString());
     }
 
     public void checkMove(int x, int y){
