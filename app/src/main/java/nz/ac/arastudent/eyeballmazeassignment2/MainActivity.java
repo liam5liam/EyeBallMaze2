@@ -32,9 +32,6 @@ import nz.ac.arastudent.eyeballmazeassignment2.model.Model;
 public class MainActivity extends AppCompatActivity {
 
     Button[][] buttons = new Button[6][4];
-    String THE_MAP = "";
-    String MOVES = "";
-    String GOALS_LEFT = "";
 
     SharedPreferences sharedPreferences = null;
 
@@ -88,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readALevel() {
-        final String originalFileSrc = "level.txt";
         try {
             InputStream inputStream = getResources().openRawResource(R.raw.level);
 
@@ -111,13 +107,15 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        myModel.setMoveCount("0");
     }
 
     private void loadLevel() {
         this.sharedPreferences = getSharedPreferences("nz.ac.arastudent.eyeballmazeassignment2.savedLevel.txt", Context.MODE_PRIVATE);
-        String map = sharedPreferences.getString(THE_MAP, "None");
-
-        String[] rows = sharedPreferences.getString(THE_MAP, "None").split(":");
+        String map = sharedPreferences.getString("theMap", "None");
+        System.out.println(map);
+        String[] rows = map.split(":");
 
         int y = 0;
         for (String aRow : rows){
@@ -131,17 +129,13 @@ public class MainActivity extends AppCompatActivity {
             }
             y++;
         }
-        System.out.println(sharedPreferences.getString(MOVES, "None"));
-       // myModel.setMoveCount(sharedPreferences.getString(MOVES, "None"));
-        //myModel.setGoalCount(sharedPreferences.getString(GOALS_LEFT, "None"));
+
+        myModel.setMoveCount(sharedPreferences.getString("movesLeft", "None"));
+        myModel.setGoalCount(sharedPreferences.getString("goalsLeft", "None"));
 
         Toast.makeText(MainActivity.this, "Game Loaded!", Toast.LENGTH_SHORT).show();
     }
 
-    private void loadMoves() {
-        this.sharedPreferences = getSharedPreferences("nz.ac.arastudent.eyeballmazeassignment2.savedLevel.txt", Context.MODE_PRIVATE);
-        myModel.setMoveCount(sharedPreferences.getString(MOVES, "None"));
-    }
     private void saveLevel() {
         String[][] currentState = myModel.getGameMap();
         String myMap = "";
@@ -149,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
         for (int y = 0; y < currentState.length; ++y) {
             for (int x = 0; x < currentState[y].length; ++x) {
                 String pos = currentState[y][x];
-                System.out.println(pos + ":");
                 myMap += pos;
                 if (x != currentState[y].length) {
                     myMap += ",";
@@ -164,11 +157,11 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = this.sharedPreferences.edit();
         //editor.clear();
 
-        editor.putString(THE_MAP, myMap);
+        editor.putString("theMap", myMap);
         editor.apply();
-        editor.putString(GOALS_LEFT, myModel.getGoalCount());
+        editor.putString("goalsLeft", myModel.getGoalCount());
         editor.apply();
-        editor.putString(MOVES, myModel.getMoveCount());
+        editor.putString("movesLeft", myModel.getMoveCount());
         editor.apply();
 
         Toast.makeText(MainActivity.this, "Game Saved!", Toast.LENGTH_SHORT).show();
@@ -188,9 +181,6 @@ public class MainActivity extends AppCompatActivity {
 
         if(id == R.id.action_load){
             loadLevel();
-            this.myModel.updateMaze();
-            updateGame();
-            loadMoves();
             this.myModel.updateMaze();
             updateGame();
         }
