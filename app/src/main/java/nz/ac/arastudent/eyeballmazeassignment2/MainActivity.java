@@ -1,8 +1,10 @@
 package nz.ac.arastudent.eyeballmazeassignment2;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -203,10 +206,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateGame(){
+        GridLayout grid =  findViewById(R.id.GameLayout);
+        int gridWidth = grid.getWidth();
+        int width = gridWidth / 10;
+        int gridHeight = grid.getHeight();
+        int height = gridHeight / 6;
+
+
         for(int y = 0; y < this.buttons.length; y++){
             for(int x = 0; x < this.buttons[y].length; x++){
                 Button aButton = this.buttons[y][x];
                 aButton.setText(this.myModel.getItem(x, y));
+                aButton.setWidth(height);
+                aButton.setHeight(height);
             }
         }
         TextView textView = findViewById(R.id.GoalCounter);
@@ -258,8 +270,11 @@ public class MainActivity extends AppCompatActivity {
             }
             //check if complete
             if (myModel.isComplete()){
-                Toast.makeText(getApplicationContext(),
-                        "You have solved it", Toast.LENGTH_SHORT).show();
+                if(myModel.getGoalCount() == "0") {
+                    gameWonDialog();
+                } else if (myModel.getMovesLeft() == 0) {
+                    gameLostDialog();
+                }
             }
             updateGame();
         }
@@ -270,6 +285,12 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.GoalCounter);
         textView.setText(myModel.getGoalCount());
 
+        GridLayout grid =  findViewById(R.id.GameLayout);
+        int gridWidth = grid.getWidth();
+        int width = gridWidth / 10;
+        int gridHeight = grid.getHeight();
+        int height = gridHeight / 6;
+
         TextView moveCounter = findViewById(R.id.MoveCounter);
         moveCounter.setText(myModel.getMoveCount());
 
@@ -277,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
             for(int x = 0; x < this.buttons[y].length; x++){
                 Button aButton = this.buttons[y][x];
                 aButton.setText(this.myModel.getItem(x, y));
+
                 final int weirdX = x;
                 final int weirdY = y;
                 aButton.setOnClickListener(new View.OnClickListener() {
@@ -288,5 +310,47 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void gameWonDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        builder.setTitle(R.string.gameWon)
+                .setPositiveButton("Restart", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        readALevel();
+                        myModel.updateMaze();
+                        updateGame();
+                    }
+                })
+                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        // 3. Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void gameLostDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.gameLost)
+                .setPositiveButton("Restart", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        readALevel();
+                        myModel.updateMaze();
+                        updateGame();
+                    }
+                })
+                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        // 3. Get the AlertDialog from create()
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 }

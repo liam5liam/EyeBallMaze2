@@ -31,6 +31,7 @@ public class Model implements IGame {
 		};
 		
 	public int moveCounter = 0;
+	public int movesLeft = 10;
 	public int goalCounter = 0;
 
 	CoOrds player = new CoOrds(0, 0, PlayerDirection.Up);
@@ -99,6 +100,10 @@ public class Model implements IGame {
 		return Integer.toString(moveCounter);
 	}
 
+	public Integer getMovesLeft(){
+		return movesLeft;
+	}
+
     public Integer[] getPlayerLocation(){
 		Integer[] coords;
 		coords = new Integer[2];
@@ -144,6 +149,7 @@ public class Model implements IGame {
 	    	if (direction == Direction.Left) { this.moveHorizontal(-spaces, PlayerDirection.Left);}
 	    	if (direction == Direction.Right) { this.moveHorizontal(spaces, PlayerDirection.Right);}
 			out = "";
+	    	movesLeft-=1;
 		}
 
     	this.updateMaze();
@@ -285,7 +291,7 @@ public class Model implements IGame {
     
     public boolean isComplete(){
     	boolean result = false;
-    	if (this.goalCounter == 0){
+    	if (this.goalCounter == 0 || this.movesLeft == 0){
     		//result = false;
     		result = true;
     	}
