@@ -41,23 +41,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       // MediaPlayer gameSong = MediaPlayer.create(this, R.raw.lifeforce);
-//        gameSong.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//        gameSong.setLooping(true);
-//        gameSong.start();
-//
-//        soundToggle = findViewById(R.id.soundToggle);
-//        soundToggle.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(sound_toggle.isChecked()){
-//                    unmute();
-//                }
-//                else{
-//                    mute();
-//                }
-//            }
-//        });
+        MediaPlayer gameSong = MediaPlayer.create(this, R.raw.scapemain);
+        gameSong.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        gameSong.setLooping(true);
+        gameSong.start();
+
+        soundToggle = findViewById(R.id.soundToggle);
+        soundToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(soundToggle.isChecked()){
+                    unmute();
+                }
+                else{
+                    mute();
+                }
+            }
+        });
 
         //Set tool bar
         Toolbar myToolbar = findViewById(R.id.game_toolbar);
