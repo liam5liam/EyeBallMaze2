@@ -46,9 +46,10 @@ public class MainActivity extends AppCompatActivity {
         gameSong.setLooping(true);
         gameSong.start();
 
-        soundToggle.isChecked();
+
 
         soundToggle = findViewById(R.id.soundToggle);
+        soundToggle.isChecked();
         soundToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
