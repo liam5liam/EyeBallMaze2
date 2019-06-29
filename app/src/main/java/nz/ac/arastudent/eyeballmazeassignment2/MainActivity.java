@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        MediaPlayer gameSong = MediaPlayer.create(this, R.raw.lifeforce);
+       // MediaPlayer gameSong = MediaPlayer.create(this, R.raw.lifeforce);
 //        gameSong.setAudioStreamType(AudioManager.STREAM_MUSIC);
 //        gameSong.setLooping(true);
 //        gameSong.start();

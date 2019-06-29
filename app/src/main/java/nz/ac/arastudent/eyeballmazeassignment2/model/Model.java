@@ -144,7 +144,7 @@ public class Model implements IGame {
 		boolean validMove = true;
     	int spaces = space;
     	if (this.isNotMovingBackwards(direction)){
-	    	moveCounter++;
+
 	    	if (direction == Direction.Down) { validMove = this.moveVertical(spaces, PlayerDirection.Down);}
 	    	else if (direction == Direction.Up) { validMove = this.moveVertical(-spaces, PlayerDirection.Up);}
 	    	
@@ -155,6 +155,7 @@ public class Model implements IGame {
 	    		out = "You can only move to a square of same Shape or Colour!";
 			} else {
 				movesLeft -= 1;
+				moveCounter++;
 				out = "";
 			}
 		}
