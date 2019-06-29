@@ -276,11 +276,6 @@ public class ManualLayoutActivity extends MainActivity {
         TextView movesLeft = findViewById(R.id.movesLeft);
         movesLeft.setText(myModel.getMovesLeft().toString());
 
-        ImageView player01 = findViewById(R.id.player01);
-        player01.bringToFront();
-        player01.setImageResource(R.drawable.playerimage);
-        player01.setX(182);
-        player01.setY(1038-50);
     }
 
     public void checkMove(int x, int y){
