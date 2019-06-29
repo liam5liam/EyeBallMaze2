@@ -275,6 +275,12 @@ public class ManualLayoutActivity extends MainActivity {
 
         TextView movesLeft = findViewById(R.id.movesLeft);
         movesLeft.setText(myModel.getMovesLeft().toString());
+
+        ImageView player01 = findViewById(R.id.player01);
+        player01.bringToFront();
+        player01.setImageResource(R.drawable.playerimage);
+        player01.setX(182);
+        player01.setY(1038-50);
     }
 
     public void checkMove(int x, int y){
@@ -297,6 +303,7 @@ public class ManualLayoutActivity extends MainActivity {
                     "You can't move diagonal, only left, right or forward.", Toast.LENGTH_SHORT).show();
         }
         else {
+
             if (y < currentY) {
                 direction = "W";
                 distance = currentY - y;
@@ -316,6 +323,7 @@ public class ManualLayoutActivity extends MainActivity {
 
             Point point = getPointOfView(buttons[y][x]);
             updatePlayer(point.x, point.y);
+
             if (isBackwards != "") {
                 Toast.makeText(getApplicationContext(),
                         isBackwards, Toast.LENGTH_SHORT).show();
@@ -341,9 +349,10 @@ public class ManualLayoutActivity extends MainActivity {
     public void updatePlayer(int x, int y){
         String direction = myModel.getPlayerDirection();
         ImageView player01 = findViewById(R.id.player01);
-
-        //layer01.setX(x);
-        //player01.setX(y);
+        System.out.println(x);
+        System.out.println(y);
+        player01.setX(x);
+        player01.setY(y-50);
 
         if(direction == "U"){
             player01.setRotation(0);
@@ -360,9 +369,6 @@ public class ManualLayoutActivity extends MainActivity {
     }
     public void initialiseGame(){
         this.myModel.updateMaze();
-
-        ImageView player01 = findViewById(R.id.player01);
-        player01.setImageResource(R.drawable.playerimage);
 
         TextView textView = findViewById(R.id.GoalCounter);
         textView.setText(myModel.getGoalCount());
@@ -384,6 +390,12 @@ public class ManualLayoutActivity extends MainActivity {
                 });
             }
         }
+
+        ImageView player01 = findViewById(R.id.player01);
+        player01.bringToFront();
+        player01.setImageResource(R.drawable.playerimage);
+        player01.setX(182);
+        player01.setY(1038-50);
     }
 
     public void gameWonDialog() {
