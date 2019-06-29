@@ -4,20 +4,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.GridLayout;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -27,17 +26,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import nz.ac.arastudent.eyeballmazeassignment2.MainActivity;
+import nz.ac.arastudent.eyeballmazeassignment2.model.IGame;
+import nz.ac.arastudent.eyeballmazeassignment2.model.Model;
 
-public class ManualLayoutActivity extends MainActivity {
-
+public class ProgrammaticalActivity extends MainActivity {
+    public IGame myModel = new Model();
     SharedPreferences sharedPreferences = null;
     public Button[][] buttons = new Button[6][4];
     ToggleButton soundToggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manual_layout);
+        setContentView(R.layout.activity_programmatical);
 
         Toolbar toolbar = findViewById(R.id.game_toolbar);
         setSupportActionBar(toolbar);
@@ -61,41 +62,31 @@ public class ManualLayoutActivity extends MainActivity {
             }
         });
 
-        //Set button
-        buttons[0][0] = (Button)findViewById(R.id.grid00);
-        buttons[0][1] = (Button)findViewById(R.id.grid10);
-        buttons[0][2] = (Button)findViewById(R.id.grid20);
-        buttons[0][3] = (Button)findViewById(R.id.grid30);
-
-        buttons[1][0] = (Button)findViewById(R.id.grid01);
-        buttons[1][1] = (Button)findViewById(R.id.grid11);
-        buttons[1][2] = (Button)findViewById(R.id.grid21);
-        buttons[1][3] = (Button)findViewById(R.id.grid31);
-
-        buttons[2][0] = (Button)findViewById(R.id.grid02);
-        buttons[2][1] = (Button)findViewById(R.id.grid12);
-        buttons[2][2] = (Button)findViewById(R.id.grid22);
-        buttons[2][3] = (Button)findViewById(R.id.grid32);
-
-        buttons[3][0] = (Button)findViewById(R.id.grid03);
-        buttons[3][1] = (Button)findViewById(R.id.grid13);
-        buttons[3][2] = (Button)findViewById(R.id.grid23);
-        buttons[3][3] = (Button)findViewById(R.id.grid33);
-
-        buttons[4][0] = (Button)findViewById(R.id.grid04);
-        buttons[4][1] = (Button)findViewById(R.id.grid14);
-        buttons[4][2] = (Button)findViewById(R.id.grid24);
-        buttons[4][3] = (Button)findViewById(R.id.grid34);
-
-        buttons[5][0] = (Button)findViewById(R.id.grid05);
-        buttons[5][1] = (Button)findViewById(R.id.grid15);
-        buttons[5][2] = (Button)findViewById(R.id.grid25);
-        buttons[5][3] = (Button)findViewById(R.id.grid35);
-
         this.initialiseGame();
-        startSong(R.raw.scapemain);
+        startSong(R.raw.gtasa);
     }
 
+    private void createButtons(){
+        Context context = getApplicationContext();
+        GridLayout gridLayout = findViewById(R.id.GameLayout);
+
+        for(int y = 0; y < this.buttons.length; y++) {
+            for (int x = 0; x < this.buttons[y].length; x++) {
+                Button btn = new Button(context);
+                String id = (Integer.toString(y) + Integer.toString(x));
+                btn.setId(Integer.parseInt(id));
+
+
+                ViewGroup.LayoutParams params = buttons[y][x].getLayoutParams();
+                btn.setLayoutParams(new TableRow.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+                params.width = R.integer.buttonSize;
+                params.height = R.integer.buttonSize;
+               // buttons[y][x].setLayoutParams(gridLayout.LayoutParams(x, y) );
+                buttons[y][x] = btn;
+            }
+        }
+    }
     protected void startSong(int song) {
         MediaPlayer gameSong = MediaPlayer.create(this, song);
         gameSong.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -127,6 +118,7 @@ public class ManualLayoutActivity extends MainActivity {
         AudioManager amanager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         amanager.setStreamMute(AudioManager.STREAM_MUSIC, false);
     }
+
 
     private void readALevel() {
         try {
@@ -179,7 +171,7 @@ public class ManualLayoutActivity extends MainActivity {
         myModel.setGoalCount(sharedPreferences.getString("goalsLeft", "None"));
         myModel.setMovesLeft(sharedPreferences.getString("movesLeft", "None"));
         myModel.setMoveCount(sharedPreferences.getString("moveCount", "None"));
-        Toast.makeText(ManualLayoutActivity.this, "Game Loaded!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ProgrammaticalActivity.this, "Game Loaded!", Toast.LENGTH_SHORT).show();
     }
 
     private void saveLevel() {
@@ -213,7 +205,7 @@ public class ManualLayoutActivity extends MainActivity {
         editor.apply();
 
 
-        Toast.makeText(ManualLayoutActivity.this, "Game Saved!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ProgrammaticalActivity.this, "Game Saved!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -245,7 +237,7 @@ public class ManualLayoutActivity extends MainActivity {
         }
 
         if(id == R.id.action_help){
-            Intent helpIntent = new Intent(ManualLayoutActivity.this, HelpActivity.class);
+            Intent helpIntent = new Intent(ProgrammaticalActivity.this, HelpActivity.class);
             startActivity(helpIntent);
         }
         return super.onOptionsItemSelected(item);
@@ -314,8 +306,6 @@ public class ManualLayoutActivity extends MainActivity {
             //check move isn't backwards
             String isBackwards = this.myModel.makeMove(direction, distance);
 
-            Point point = getPointOfView(buttons[y][x]);
-            updatePlayer(point.x, point.y);
             if (isBackwards != "") {
                 Toast.makeText(getApplicationContext(),
                         isBackwards, Toast.LENGTH_SHORT).show();
@@ -332,37 +322,8 @@ public class ManualLayoutActivity extends MainActivity {
         }
     }
 
-    private Point getPointOfView(View view) {
-        int[] location = new int[2];
-        view.getLocationInWindow(location);
-        return new Point(location[0], location[1]);
-    }
-
-    public void updatePlayer(int x, int y){
-        String direction = myModel.getPlayerDirection();
-        ImageView player01 = findViewById(R.id.player01);
-
-        //layer01.setX(x);
-        //player01.setX(y);
-
-        if(direction == "U"){
-            player01.setRotation(0);
-        }
-        else if(direction == "L"){
-            player01.setRotation(-90);
-        }
-        else if(direction == "R"){
-            player01.setRotation(90);
-        }
-        else if(direction == "D"){
-            player01.setRotation(180);
-        }
-    }
     public void initialiseGame(){
         this.myModel.updateMaze();
-
-        ImageView player01 = findViewById(R.id.player01);
-        player01.setImageResource(R.drawable.playerimage);
 
         TextView textView = findViewById(R.id.GoalCounter);
         textView.setText(myModel.getGoalCount());

@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     public Button[][] buttons = new Button[6][4];
     MediaPlayer gameSong;
-    ToggleButton soundToggle;
+
 
     public Toolbar myToolbar;
 
@@ -45,6 +45,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        Button programmaticLayout = findViewById(R.id.btnProgrammatic);
+        programmaticLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent programmaticIntent = new Intent(MainActivity.this, ProgrammaticalActivity.class);
+                startActivity(programmaticIntent);
+            }
+        });
+
         Button manualLayout = findViewById(R.id.btnManual);
         manualLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,38 +65,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        startSong(R.raw.scapemain);
-    }
-
-    protected void startSong(int song) {
-        MediaPlayer gameSong = MediaPlayer.create(this, song);
-        gameSong.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        gameSong.setLooping(true);
-        gameSong.start();
-
-        soundToggle = findViewById(R.id.soundToggle);
-        soundToggle.isChecked();
-        soundToggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (soundToggle.isChecked()) {
-                    unmute();
-                } else {
-                    mute();
-                }
-            }
-        });
-    }
-    protected void mute() {
-        //mute audio
-        AudioManager amanager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        amanager.setStreamMute(AudioManager.STREAM_MUSIC, true);
-    }
-
-
-    protected void unmute() {
-        //unmute audio
-        AudioManager amanager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        amanager.setStreamMute(AudioManager.STREAM_MUSIC, false);
     }
 }
