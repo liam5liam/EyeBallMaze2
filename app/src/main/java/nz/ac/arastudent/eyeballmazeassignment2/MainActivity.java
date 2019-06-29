@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         gameSong.setLooping(true);
         gameSong.start();
 
+        soundToggle.isChecked();
+
         soundToggle = findViewById(R.id.soundToggle);
         soundToggle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -306,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
             }
             //check if complete
             if (myModel.isComplete()){
-                if(myModel.getGoalCount() == "0") {
+                if(Integer.parseInt(myModel.getGoalCount()) == 0) {
                     gameWonDialog();
                 } else if (myModel.getMovesLeft() == 0) {
                     gameLostDialog();
@@ -347,6 +349,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void gameWonDialog() {
+
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle(R.string.gameWon)
@@ -366,9 +370,17 @@ public class MainActivity extends AppCompatActivity {
         // 3. Get the AlertDialog from create()
         AlertDialog dialog = builder.create();
         dialog.show();
+
+        MediaPlayer gameSong = MediaPlayer.create(this, R.raw.winner);
+        gameSong.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        gameSong.start();
     }
 
     public void gameLostDialog() {
+        MediaPlayer gameSong = MediaPlayer.create(this, R.raw.loser);
+        gameSong.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        gameSong.start();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle(R.string.gameLost)
