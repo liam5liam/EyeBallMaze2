@@ -329,4 +329,18 @@
         android:layout_toRightOf="@+id/moves"
         android:text="0" />
 
+    <ToggleButton
+        android:id="@+id/soundToggle"
+        android:layout_width="56dp"
+        android:layout_height="35dp"
+        android:layout_alignTop="@+id/game_toolbar"
+        android:layout_alignEnd="@+id/game_toolbar"
+        android:layout_alignRight="@+id/game_toolbar"
+        android:layout_alignBottom="@+id/game_toolbar"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="76dp"
+        android:layout_marginRight="76dp"
+        android:layout_marginBottom="10dp"
+        android:text="ToggleButton" />
+
 </RelativeLayout>
