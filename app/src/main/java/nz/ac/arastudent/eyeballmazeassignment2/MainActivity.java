@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mute();
 
         Button programmaticLayout = findViewById(R.id.btnProgrammatic);
         programmaticLayout.setOnClickListener(new View.OnClickListener() {
@@ -65,5 +65,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    protected void mute() {
+        //mute audio
+        AudioManager amanager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        amanager.setStreamMute(AudioManager.STREAM_MUSIC, true);
     }
 }

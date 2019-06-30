@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -56,27 +58,6 @@ public class ProgrammaticalActivity extends MainActivity {
 
     }
 
-    private void createButtons(){
-        Context context = getApplicationContext();
-        GridLayout gridLayout = findViewById(R.id.GameLayout);
-
-        for(int y = 0; y < this.buttons.length; y++) {
-            for (int x = 0; x < this.buttons[y].length; x++) {
-                Button btn = new Button(context);
-                String id = (Integer.toString(y) + Integer.toString(x));
-                btn.setId(Integer.parseInt(id));
-
-
-                ViewGroup.LayoutParams params = buttons[y][x].getLayoutParams();
-                btn.setLayoutParams(new TableRow.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-                params.width = R.integer.buttonSize;
-                params.height = R.integer.buttonSize;
-               // buttons[y][x].setLayoutParams(gridLayout.LayoutParams(x, y) );
-                buttons[y][x] = btn;
-            }
-        }
-    }
     protected void startSong(int song) {
         MediaPlayer gameSong = MediaPlayer.create(this, song);
         gameSong.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -122,7 +103,7 @@ public class ProgrammaticalActivity extends MainActivity {
             int j = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] line2 = line.split(",");
-                for (int i=0; i<line2.length; i++) {
+                for (int i = 0; i < line2.length; i++) {
                     line2[i] = line2[i].replace("\"", "");
                     myModel.setMazeCharacter(i, j, line2[i]);
                 }
@@ -134,34 +115,40 @@ public class ProgrammaticalActivity extends MainActivity {
             e.printStackTrace();
         }
 
+        ImageView player01 = findViewById(R.id.player01);
+        player01.bringToFront();
+        player01.setImageResource(R.drawable.playerimage);
         myModel.setMoveCount("0");
         myModel.setMovesLeft("10");
+        updatePlayer();
     }
 
     private void loadLevel() {
-        this.sharedPreferences = getSharedPreferences("nz.ac.arastudent.eyeballmazeassignment2.savedLevel.txt", Context.MODE_PRIVATE);
-        String map = sharedPreferences.getString("theMap", "None");
-        System.out.println(map);
-        String[] rows = map.split(":");
+            this.sharedPreferences = getSharedPreferences("nz.ac.arastudent.eyeballmazeassignment2.savedLevel.txt", Context.MODE_PRIVATE);
+            String map = sharedPreferences.getString("theMap", "None");
+            System.out.println(map);
+            String[] rows = map.split(":");
 
-        int y = 0;
-        for (String aRow : rows){
-            String[] blocks = aRow.split(",");
+            int y = 0;
+            for (String aRow : rows){
+                String[] blocks = aRow.split(",");
 
-            int x = 0;
-            for (String aBlock : blocks){
-                System.out.println(aBlock + "()");
-                myModel.setMazeCharacter(x, y, aBlock);
-                x++;
+                int x = 0;
+                for (String aBlock : blocks){
+                    System.out.println(aBlock + "()");
+                    myModel.setMazeCharacter(x, y, aBlock);
+                    x++;
+                }
+                y++;
             }
-            y++;
-        }
 
-        myModel.setMoveCount(sharedPreferences.getString("movesLeft", "None"));
-        myModel.setGoalCount(sharedPreferences.getString("goalsLeft", "None"));
-        myModel.setMovesLeft(sharedPreferences.getString("movesLeft", "None"));
-        myModel.setMoveCount(sharedPreferences.getString("moveCount", "None"));
-        Toast.makeText(ProgrammaticalActivity.this, "Game Loaded!", Toast.LENGTH_SHORT).show();
+            myModel.setMoveCount(sharedPreferences.getString("movesLeft", "None"));
+            myModel.setGoalCount(sharedPreferences.getString("goalsLeft", "None"));
+            myModel.setMovesLeft(sharedPreferences.getString("movesLeft", "None"));
+            myModel.setMoveCount(sharedPreferences.getString("moveCount", "None"));
+
+            updateGame();
+            Toast.makeText(ProgrammaticalActivity.this, "Game Loaded!", Toast.LENGTH_SHORT).show();
     }
 
     private void saveLevel() {
@@ -194,7 +181,11 @@ public class ProgrammaticalActivity extends MainActivity {
         editor.putString("moveCount", myModel.getMoveCount());
         editor.apply();
 
+        Point point = getCurrentPosition();
+        editor.putString("playerX", Integer.toString(point.x));
+        editor.putString("playerY", Integer.toString(point.y));
 
+        editor.apply();
         Toast.makeText(ProgrammaticalActivity.this, "Game Saved!", Toast.LENGTH_SHORT).show();
     }
 
@@ -248,6 +239,7 @@ public class ProgrammaticalActivity extends MainActivity {
 
         TextView movesLeft = findViewById(R.id.movesLeft);
         movesLeft.setText(myModel.getMovesLeft().toString());
+        updatePlayer();
     }
 
     public void checkMove(int x, int y){
@@ -270,6 +262,7 @@ public class ProgrammaticalActivity extends MainActivity {
                     "You can't move diagonal, only left, right or forward.", Toast.LENGTH_SHORT).show();
         }
         else {
+
             if (y < currentY) {
                 direction = "W";
                 distance = currentY - y;
@@ -303,6 +296,41 @@ public class ProgrammaticalActivity extends MainActivity {
         }
     }
 
+    public Point getCurrentPosition(){
+        Integer[] pos = myModel.getPlayerLocation();
+        Button currentButton = buttons[pos[1]][ pos[0]];
+        Point point = getPointOfView(currentButton);
+        return point;
+    }
+
+    private Point getPointOfView(View view) {
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+        return new Point(location[0], location[1]);
+    }
+
+    public void updatePlayer(){
+        String direction = myModel.getPlayerDirection();
+        ImageView player01 = findViewById(R.id.player01);
+
+        Point point = getCurrentPosition();
+        player01.setX(point.x);
+        player01.setY(point.y-50);
+
+        if(direction == "U"){
+            player01.setRotation(0);
+        }
+        else if(direction == "L"){
+            player01.setRotation(-90);
+        }
+        else if(direction == "R"){
+            player01.setRotation(90);
+        }
+        else if(direction == "D"){
+            player01.setRotation(180);
+        }
+    }
+
     public void initialiseGame(){
         this.myModel.updateMaze();
 
@@ -319,13 +347,12 @@ public class ProgrammaticalActivity extends MainActivity {
                 Button btn = new Button(this);
                 btn.setText(this.myModel.getItem(x, y));
 
-                TableRow.LayoutParams tr = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+                TableRow.LayoutParams tr = new TableRow.LayoutParams(150, 150);
 
                 tr.weight = 0;
                 btn.setLayoutParams(tr);
                 btn.setText(this.myModel.getItem(x, y));
-                btn.setWidth(150);
-                btn.setHeight(150);
+
                 String id = Integer.toString(y) + Integer.toString(x);
                 btn.setId(Integer.parseInt(id));
                 row.addView(btn);
@@ -343,6 +370,11 @@ public class ProgrammaticalActivity extends MainActivity {
             }
             table.addView(row);
         }
+        ImageView player01 = findViewById(R.id.player01);
+        player01.bringToFront();
+        player01.setImageResource(R.drawable.playerimage);
+        player01.setX(166);
+        player01.setY(1038-50);
     }
 
     public void gameWonDialog() {

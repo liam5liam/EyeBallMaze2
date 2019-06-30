@@ -262,19 +262,10 @@ public class ManualLayoutActivity extends MainActivity {
     }
 
     public void updateGame(){
-        GridLayout grid =  findViewById(R.id.GameLayout);
-        int gridWidth = grid.getWidth();
-        int width = gridWidth / 10;
-        int gridHeight = grid.getHeight();
-        int height = gridHeight / 6;
-
-
         for(int y = 0; y < this.buttons.length; y++){
             for(int x = 0; x < this.buttons[y].length; x++){
                 Button aButton = this.buttons[y][x];
                 aButton.setText(this.myModel.getItem(x, y));
-                aButton.setWidth(height);
-                aButton.setHeight(height);
             }
         }
         TextView textView = findViewById(R.id.GoalCounter);
