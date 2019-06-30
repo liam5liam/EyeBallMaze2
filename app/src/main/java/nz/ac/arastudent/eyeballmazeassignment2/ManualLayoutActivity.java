@@ -152,8 +152,12 @@ public class ManualLayoutActivity extends MainActivity {
             e.printStackTrace();
         }
 
+        ImageView player01 = findViewById(R.id.player01);
+        player01.bringToFront();
+        player01.setImageResource(R.drawable.playerimage);
         myModel.setMoveCount("0");
         myModel.setMovesLeft("10");
+        updatePlayer();
     }
 
     private void loadLevel() {
@@ -179,6 +183,8 @@ public class ManualLayoutActivity extends MainActivity {
         myModel.setGoalCount(sharedPreferences.getString("goalsLeft", "None"));
         myModel.setMovesLeft(sharedPreferences.getString("movesLeft", "None"));
         myModel.setMoveCount(sharedPreferences.getString("moveCount", "None"));
+
+        updateGame();
         Toast.makeText(ManualLayoutActivity.this, "Game Loaded!", Toast.LENGTH_SHORT).show();
     }
 
@@ -212,7 +218,11 @@ public class ManualLayoutActivity extends MainActivity {
         editor.putString("moveCount", myModel.getMoveCount());
         editor.apply();
 
+        Point point = getCurrentPosition();
+        editor.putString("playerX", Integer.toString(point.x));
+        editor.putString("playerY", Integer.toString(point.y));
 
+        editor.apply();
         Toast.makeText(ManualLayoutActivity.this, "Game Saved!", Toast.LENGTH_SHORT).show();
     }
 
@@ -275,7 +285,7 @@ public class ManualLayoutActivity extends MainActivity {
 
         TextView movesLeft = findViewById(R.id.movesLeft);
         movesLeft.setText(myModel.getMovesLeft().toString());
-
+        updatePlayer();
     }
 
     public void checkMove(int x, int y){
@@ -316,9 +326,6 @@ public class ManualLayoutActivity extends MainActivity {
             //check move isn't backwards
             String isBackwards = this.myModel.makeMove(direction, distance);
 
-            Point point = getPointOfView(buttons[y][x]);
-            updatePlayer(point.x, point.y);
-
             if (isBackwards != "") {
                 Toast.makeText(getApplicationContext(),
                         isBackwards, Toast.LENGTH_SHORT).show();
@@ -335,19 +342,26 @@ public class ManualLayoutActivity extends MainActivity {
         }
     }
 
+    public Point getCurrentPosition(){
+        Integer[] pos = myModel.getPlayerLocation();
+        Button currentButton = buttons[pos[1]][ pos[0]];
+        Point point = getPointOfView(currentButton);
+        return point;
+    }
+
     private Point getPointOfView(View view) {
         int[] location = new int[2];
         view.getLocationInWindow(location);
         return new Point(location[0], location[1]);
     }
 
-    public void updatePlayer(int x, int y){
+    public void updatePlayer(){
         String direction = myModel.getPlayerDirection();
         ImageView player01 = findViewById(R.id.player01);
-        System.out.println(x);
-        System.out.println(y);
-        player01.setX(x);
-        player01.setY(y-50);
+
+        Point point = getCurrentPosition();
+        player01.setX(point.x);
+        player01.setY(point.y-50);
 
         if(direction == "U"){
             player01.setRotation(0);
