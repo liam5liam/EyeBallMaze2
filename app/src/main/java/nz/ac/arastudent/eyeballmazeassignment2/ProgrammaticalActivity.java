@@ -316,12 +316,6 @@ public class ProgrammaticalActivity extends MainActivity {
         for(int y = 0; y < this.buttons.length; y++){
             TableRow row = new TableRow(this);
             for(int x = 0; x < this.buttons[y].length; x++){
-//                this.buttons[y][x] = new Button(this);
-//                Button aButton = this.buttons[x][y];
-//                aButton.setText(this.myModel.getItem(x, y));
-//
-//                final int weirdX = x;
-//                final int weirdY = y;
                 Button btn = new Button(this);
                 btn.setText(this.myModel.getItem(x, y));
 

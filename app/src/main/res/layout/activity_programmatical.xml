@@ -77,51 +77,50 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView2"
-        android:layout_marginTop="8dp"
-        android:text="Moves Left: "
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginStart="8dp"
+
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="36dp"
+        android:text="Moves Left: "
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/game_toolbar"/>
+        app:layout_constraintTop_toBottomOf="@+id/game_toolbar" />
 
     <TextView
         android:id="@+id/movesLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/game_toolbar"
-        android:layout_marginStart="2dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="36dp"
         android:layout_toEndOf="@+id/moves"
-        android:layout_toRightOf="@+id/moves"
-        android:text="0" />
+        android:layout_toLeftOf="@+id/moves"
+        android:text="0"
+        app:layout_constraintStart_toEndOf="@+id/moves"
+        app:layout_constraintTop_toBottomOf="@+id/game_toolbar" />
 
     <ToggleButton
         android:id="@+id/soundToggle"
+        android:layout_below="@+id/game_toolbar"
         android:layout_width="40dp"
         android:layout_height="25dp"
-        android:layout_below="@+id/textView4"
 
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="36dp"
         android:layout_toEndOf="@+id/textView9"
         android:layout_toRightOf="@+id/textView9"
         android:background="#EB1BB94F"
         android:checked="true"
-        android:text="ToggleButton" />
+        android:text="ToggleButton"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/game_toolbar" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView4"
-        android:layout_marginLeft="45dp"
-        android:layout_marginTop="8dp"
-        android:layout_toEndOf="@+id/movesLeft"
-        android:layout_toRightOf="@+id/movesLeft"
-        android:text="Sound ON/OFF" />
+        android:layout_marginTop="36dp"
+        android:text="Sound ON/OFF"
+        app:layout_constraintTop_toBottomOf="@+id/game_toolbar"
+        android:layout_marginLeft="46dp"
+        app:layout_constraintStart_toEndOf="@+id/textView2"/>
 
     <TableLayout
         android:id="@+id/mainTable"
