@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,21 +51,9 @@ public class ProgrammaticalActivity extends MainActivity {
         TextView movesLeft = findViewById(R.id.movesLeft);
         movesLeft.setText(myModel.getMovesLeft().toString());
 
-        soundToggle = findViewById(R.id.soundToggle);
-        soundToggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(soundToggle.isChecked()){
-                    unmute();
-                }
-                else{
-                    mute();
-                }
-            }
-        });
-
-        this.initialiseGame();
         startSong(R.raw.gtasa);
+        this.initialiseGame();
+
     }
 
     private void createButtons(){
@@ -244,19 +234,10 @@ public class ProgrammaticalActivity extends MainActivity {
     }
 
     public void updateGame(){
-        GridLayout grid =  findViewById(R.id.GameLayout);
-        int gridWidth = grid.getWidth();
-        int width = gridWidth / 10;
-        int gridHeight = grid.getHeight();
-        int height = gridHeight / 6;
-
-
         for(int y = 0; y < this.buttons.length; y++){
             for(int x = 0; x < this.buttons[y].length; x++){
                 Button aButton = this.buttons[y][x];
                 aButton.setText(this.myModel.getItem(x, y));
-                aButton.setWidth(height);
-                aButton.setHeight(height);
             }
         }
         TextView textView = findViewById(R.id.GoalCounter);
@@ -331,19 +312,42 @@ public class ProgrammaticalActivity extends MainActivity {
         TextView moveCounter = findViewById(R.id.MoveCounter);
         moveCounter.setText(myModel.getMoveCount());
 
+        TableLayout table = findViewById(R.id.mainTable);
         for(int y = 0; y < this.buttons.length; y++){
+            TableRow row = new TableRow(this);
             for(int x = 0; x < this.buttons[y].length; x++){
-                Button aButton = this.buttons[y][x];
-                aButton.setText(this.myModel.getItem(x, y));
+//                this.buttons[y][x] = new Button(this);
+//                Button aButton = this.buttons[x][y];
+//                aButton.setText(this.myModel.getItem(x, y));
+//
+//                final int weirdX = x;
+//                final int weirdY = y;
+                Button btn = new Button(this);
+                btn.setText(this.myModel.getItem(x, y));
+
+                TableRow.LayoutParams tr = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+
+                tr.weight = 0;
+                btn.setLayoutParams(tr);
+                btn.setText(this.myModel.getItem(x, y));
+                btn.setWidth(150);
+                btn.setHeight(150);
+                String id = Integer.toString(y) + Integer.toString(x);
+                btn.setId(Integer.parseInt(id));
+                row.addView(btn);
 
                 final int weirdX = x;
                 final int weirdY = y;
-                aButton.setOnClickListener(new View.OnClickListener() {
+                btn.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view){
                         checkMove(weirdX, weirdY);
                     }
                 });
+
+                buttons[y][x] = btn;
+                System.out.println(buttons[y][x]);
             }
+            table.addView(row);
         }
     }
 
